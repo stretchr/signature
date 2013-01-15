@@ -2,6 +2,7 @@ package signature
 
 import (
 	"errors"
+	"fmt"
 	stewstrings "github.com/stretchrcom/stew/strings"
 	"net/url"
 	"strings"
@@ -77,6 +78,9 @@ func ValidateSignature(method, requestUrl, body, privateKey string) (bool, error
 		return false, signErr
 	}
 
-	return signature == expectedSignature, nil
+	if signature != expectedSignature {
+		return false, errors.New(fmt.Sprintf("Signature \"%s\" is incorrect when \"%s\" is expected.", signature, expectedSignature))
+	}
+	return true, nil
 
 }
