@@ -1,4 +1,4 @@
-signature
+Signature
 =========
 
 URL signing package for Go.
@@ -6,6 +6,8 @@ URL signing package for Go.
 ## What does it do?
 
 Secure web calls by generating a security hash on the client (using a private key shared with the server), to ensure that the request is geniune.  Only a client who knows the private key will be able to generate the same security hash.
+
+Since the private key is only used to generate the security hash and not transmitted with the request (only some kind of public key is), the server and client must agree on the private key in order for the hash to be verified.
 
 ## How does it work?
 
