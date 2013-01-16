@@ -35,7 +35,7 @@ To generate SignatureKey parameter:
 
 ## Settings
 
-The `signature` package provides some settings to allow you to use non-default field names in your code.
+The `signature` package provides some settings to allow you to use non-default field names in your code.  Remember that the client needs to use the same fields in order for the security hashes to match.
 
     // PrivateKeyKey is the key (URL field) for the private key.
     signature.PrivateKeyKey string = "~private"
