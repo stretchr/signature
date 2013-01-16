@@ -22,9 +22,9 @@ To generate SignatureKey parameter:
   * Add `PrivateKeyKey` key parameter
   * Add `BodyHashKey` value containing an SHA-1 hash of the body contents if there is a body - otherwise, skip this step (and do not add a `BodyHashKey` parameter at all)
   * Order parameters alphabetically
-  * Prefix it with the HTTP method (in uppercase) followed by an ampersand (i.e. "GET&http://...")
+  * Prefix it with the HTTP method (in uppercase) followed by an ampersand (i.e. `GET&http://...`)
   * Hash it (using SHA-1)
-  * Add the hash as `SignatureKey` to the END of the original URL
+  * Add the hash as `SignatureKey` to the _end_ of the original URL
 
 ### Decoding
 
@@ -32,6 +32,19 @@ To generate SignatureKey parameter:
   * Lookup the account (using the public key) and get the `PrivateKeyKey` parameter, and add it to the URL
   * Hash it
   * Compare the generated hash with the `SignatureKey` value to decide if it the request is valid or not
+
+## Settings
+
+The `signature` package provides some settings to allow you to use non-default field names in your code.
+
+    // PrivateKeyKey is the key (URL field) for the private key.
+    signature.PrivateKeyKey string = "~private"
+    
+    // BodyHashKey is the key (URL field) for the body hash used for signing requests.
+    signature.BodyHashKey string = "~bodyhash"
+    
+    // SignatureKey is the key (URL field) for the signature of requests.
+    signature.SignatureKey string = "~sign"
 
 ## Validation
 
