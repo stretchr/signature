@@ -8,7 +8,7 @@ import (
 // HashFunc represents funcs that can hash a string.
 type HashFunc func(s string) string
 
-// Hash hashes a string using the default (SHA1Hash) hasher func.
+// Hash hashes a string using the current HashFunc.
 var Hash HashFunc = SHA1Hash
 
 // SHA1Hash hashes a string using the SHA-1 algorithm.
