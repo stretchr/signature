@@ -11,6 +11,7 @@ import (
 // FailedSignature is the string that will be used if signing fails.
 const FailedSignature string = ":-("
 
+// ErrNoSignatureFound is the error that is thrown when no signature could be found.
 var ErrNoSignatureFound = errors.New("No signature was found.")
 
 // GetSignature gets the signature of a request based on the given parameters.
