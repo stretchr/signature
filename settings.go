@@ -1,8 +1,11 @@
 package signature
 
 var (
-	// PrivateKeyKey is the key (URL field) for the private key.
-	PrivateKeyKey string = "~private"
+	// SignPrivateKey is the key (URL field) for the private key.
+	SignPrivateKey string = "~private"
+
+	// SignPublicKey is the key (URL field) for the public key.
+	SignPublicKey string = "~key"
 
 	// BodyHashKey is the key (URL field) for the body hash used for signing requests.
 	BodyHashKey string = "~bodyhash"
