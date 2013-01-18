@@ -64,17 +64,33 @@ func GetSignedURL(method, requestUrl, body, privateKey string) (string, error) {
 // the specified parameters.
 func ValidateSignature(method, requestUrl, body, privateKey string) (bool, error) {
 
-	// trim off the sign parameter
-	segs := strings.Split(requestUrl, stewstrings.MergeStrings("&", SignatureKey, "="))
-
-	if len(segs) < 2 {
+	if !strings.Contains(requestUrl, "?") {
 		return false, ErrNoSignatureFound
 	}
 
-	modifiedUrl := segs[0]
-	signature := segs[1]
+	// First, get the query string alone
+	segs := strings.Split(requestUrl, "?")
 
-	expectedSignature, signErr := GetSignature(method, modifiedUrl, body, privateKey)
+	bareURL := segs[0]
+
+	// segs[1] now contains all the parameters. We need to extract the signature
+	// and reconstruct the url without it
+	paramSegs := strings.Split(segs[1], "&")
+
+	var cleanParams []string
+	var signature string
+	for _, param := range paramSegs {
+		if strings.Contains(param, SignatureKey) {
+			sigParts := strings.Split(param, "=")
+			signature = sigParts[1]
+		} else {
+			cleanParams = append(cleanParams, param)
+		}
+	}
+
+	modifiedURL := stewstrings.MergeStrings(bareURL, "?", stewstrings.JoinStrings("&", cleanParams...))
+
+	expectedSignature, signErr := GetSignature(method, modifiedURL, body, privateKey)
 
 	if signErr != nil {
 		return false, signErr
