@@ -53,9 +53,10 @@ func GetSignedURL(method, requestUrl, body, privateKey string) (string, error) {
 		return FailedSignature, hashErr
 	}
 
-	signed := stewstrings.MergeStrings(requestUrl, "&", url.QueryEscape(SignatureKey), "=", url.QueryEscape(hash))
-
-	return signed, nil
+	if strings.Contains(requestUrl, "?") {
+		return stewstrings.MergeStrings(requestUrl, "&", url.QueryEscape(SignatureKey), "=", url.QueryEscape(hash)), nil
+	}
+	return stewstrings.MergeStrings(requestUrl, "?", url.QueryEscape(SignatureKey), "=", url.QueryEscape(hash)), nil
 
 }
 
