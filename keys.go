@@ -6,15 +6,9 @@ import (
 	"time"
 )
 
-func RandomKey(length ...int) string {
+func RandomKey(length int) string {
 
-	theLength := 32
-
-	if len(length) > 0 {
-		theLength = length[0]
-	}
-
-	return randomString(theLength)
+	return randomString(length)
 
 }
 
