@@ -3,6 +3,8 @@ Signature
 
 URL signing package for Go.
 
+  * You can jump straight into the [API documentation](http://godoc.org/github.com/stretchrcom/signature).
+
 ## What does it do?
 
 Secure web calls by generating a security hash on the client (using a private key shared with the server), to ensure that the request is geniune.  Only a client who knows the private key will be able to generate the same security hash.
