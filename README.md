@@ -7,18 +7,24 @@ URL signing package for Go.
 
 ## What does it do?
 
-Secure web calls by generating a security hash on the client (using a private key shared with the server), to ensure that the request is geniune.  Only a client who knows the private key will be able to generate the same security hash.
+Signature secures web calls by generating a security hash on the client (using a private key shared with the server), to ensure that the request is geniune.  Only a client who knows the private key will be able to generate the same security hash.
 
 Since the private key is only used to generate the security hash and not transmitted with the request (only some kind of public key is), the server and client must agree on the private key in order for the hash to be verified.
 
 ## How does it work?
 
-### Encoding
+### Encoding Process
 
-  * Generate the original request URL
-  * Add public key value
+Before signing the request, you must:
 
-To generate SignatureKey parameter:
+  * Generate the original request URL 
+   * example: http://something.com?key=value&key2=value2
+  * Add the public key value to the request URL
+   * example: http://something.com?key=value&key2=value2?key=85Bad53987b3d851
+
+SignatureKey parameter generation:
+
+To generate a the signature for the request, the Signature package does the following:
 
   * Create a copy of the request URL
   * Add `PrivateKeyKey` key parameter
@@ -29,6 +35,8 @@ To generate SignatureKey parameter:
   * Add the hash as `SignatureKey` to the _end_ of the original URL
 
 ### Decoding
+
+To verify a signed request, the Signature package does the following:
 
   * Strip off the `SignatureKey` parameter (and keep it)
   * Lookup the account (using the public key) and get the `PrivateKeyKey` parameter, and add it to the URL
