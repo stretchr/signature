@@ -23,7 +23,7 @@ To generate SignatureKey parameter:
   * Create a copy of the request URL
   * Add `PrivateKeyKey` key parameter
   * Add `BodyHashKey` value containing an SHA-1 hash of the body contents if there is a body - otherwise, skip this step (and do not add a `BodyHashKey` parameter at all)
-  * Order parameters alphabetically
+  * Order parameters alphabetically.  Order first by keys, and if there are multiple values for one key (i.e. ?color=red&color=blue) then order the values alphabetically afterwards.
   * Prefix it with the HTTP method (in uppercase) followed by an ampersand (i.e. `GET&http://...`)
   * Hash it (using SHA-1)
   * Add the hash as `SignatureKey` to the _end_ of the original URL
