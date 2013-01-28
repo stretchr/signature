@@ -23,7 +23,7 @@ func TestMD5Hash(t *testing.T) {
 
 func TestHashWithPrivateKey(t *testing.T) {
 
-	assert.Equal(t, HashWithKeys([]byte("some bytes to hash"), []byte("public key"), []byte("private key")), "f09b5012ffea295d3c199c1db9beaeaff3755501")
+	assert.Equal(t, HashWithKeys([]byte("some bytes to hash"), []byte("public key"), []byte("private key")), "4c9ac9d6594e19c0bcbfcc261f82e190cf222526")
 	assert.NotEmpty(t, HashWithKeys([]byte("some bytes to hash"), []byte("public key"), []byte("private key")), HashWithKeys([]byte("some bytes to hash"), []byte("public key"), []byte("different private key")))
 	assert.NotEmpty(t, HashWithKeys([]byte("some bytes to hash"), []byte("public key"), []byte("private key")), HashWithKeys([]byte("some bytes to hash"), []byte("different public key"), []byte("private key")))
 	assert.NotEmpty(t, HashWithKeys([]byte("some bytes to hash"), []byte("public key"), []byte("private key")), HashWithKeys([]byte("different bytes to hash"), []byte("public key"), []byte("private key")))
