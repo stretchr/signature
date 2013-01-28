@@ -8,6 +8,8 @@ import (
 	"io"
 )
 
+var HashWithKeysSeparator string = ":"
+
 // HashFunc represents funcs that can hash a string.
 type HashFunc func(s string) string
 
@@ -44,10 +46,14 @@ var MD5Hash HashFunc = func(s string) string {
 // HashWithKeys generates a hash of the specified bytes by first merging them with
 // the specified private key.
 //
-// The public key bytes are first appended to the body bytes, followed by a colon (:) byte,
-// followed by the private key bytes.
+// For format is:
+//
+//     BODY:PUBLIC:PRIVATE
+//
+// The keywords should be replaced with the actual bytes, but the colons are literals as the
+// HashWithKeysSeparator value is used to separate the values.
 //
 // Useful for hashing non URLs (such as response bodies etc.)
 func HashWithKeys(body, publicKey, privateKey []byte) string {
-	return Hash(string(strings.MergeBytes(body, publicKey, []byte(":"), privateKey)))
+	return Hash(string(strings.JoinBytes([]byte(HashWithKeysSeparator), body, publicKey, privateKey)))
 }
