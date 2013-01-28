@@ -45,15 +45,7 @@ To verify a signed request, the Signature package does the following:
   * Hash it
   * Compare the generated hash with the `SignatureKey` value to decide if it the request is valid or not
 
-## Response signing
-
-Response signing refers to generating a hash based on the response, to validate that the remote server indeed was responsible for generating the response.  This prevents clients of the service from being tricked into accepting a response from an unreliable source.
-
-### The `HashWithKeys` method
-
-Signature provides the `HashWithKeys` method that allows you to hash a series of bytes (along with the public and private keys).  When this value is transmitted to the client, they can attempt to generate the same hash.  If the hashes match, then the response was geniune.
-
-## Settings
+### Settings
 
 The `signature` package provides some settings to allow you to use non-default field names in your code.  Remember that the client needs to use the same fields in order for the security hashes to match.
 
@@ -66,7 +58,7 @@ The `signature` package provides some settings to allow you to use non-default f
     // SignatureKey is the key (URL field) for the signature of requests.
     signature.SignatureKey string = "~sign"
 
-## Validating request signature
+### Validating request signature
 
 To validate your code is generating the correct hash, try these:
 
@@ -93,6 +85,14 @@ should be hashed as
 leaving the final URL as
 
     http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~sign=df073ee4086eed5848d167871c7424937027728e
+
+## Response signing
+
+Response signing refers to generating a hash based on the response, to validate that the remote server indeed was responsible for generating the response.  This prevents clients of the service from being tricked into accepting a response from an unreliable source.
+
+### The `HashWithKeys` method
+
+Signature provides the `HashWithKeys` method that allows you to hash a series of bytes (along with the public and private keys).  When this value is transmitted to the client, they can attempt to generate the same hash.  If the hashes match, then the response was geniune.
 
 
 ------
