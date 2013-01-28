@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"crypto/sha1"
 	"fmt"
+	"github.com/stretchrcom/stew/strings"
 	"io"
 )
 
@@ -38,4 +39,15 @@ var MD5Hash HashFunc = func(s string) string {
 	md5 := md5.New()
 	io.WriteString(md5, s)
 	return fmt.Sprintf("%x", md5.Sum(nil))
+}
+
+// HashWithKeys generates a hash of the specified bytes by first merging them with
+// the specified private key.
+//
+// The public key bytes are first appended to the body bytes, followed by a colon (:) byte,
+// followed by the private key bytes.
+//
+// Useful for hashing non URLs (such as response bodies etc.)
+func HashWithKeys(body, publicKey, privateKey []byte) string {
+	return Hash(string(strings.MergeBytes(body, publicKey, []byte(":"), privateKey)))
 }
