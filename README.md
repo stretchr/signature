@@ -11,7 +11,9 @@ Signature secures web calls by generating a security hash on the client (using a
 
 Since the private key is only used to generate the security hash and not transmitted with the request (only some kind of public key is), the server and client must agree on the private key in order for the hash to be verified.
 
-## How does it work?
+## Request signing
+
+Request signing entails generating a hash based on the details of the request, PLUS a private key - and having the remote server try to generate the same hash, assuming you both agree on the private key.
 
 ### Encoding Process
 
@@ -43,6 +45,14 @@ To verify a signed request, the Signature package does the following:
   * Hash it
   * Compare the generated hash with the `SignatureKey` value to decide if it the request is valid or not
 
+## Response signing
+
+Response signing refers to generating a hash based on the response, to validate that the remote server indeed was responsible for generating the response.  This prevents clients of the service from being tricked into accepting a response from an unreliable source.
+
+### The `HashWithKeys` method
+
+Signature provides the `HashWithKeys` method that allows you to hash a series of bytes (along with the public and private keys).  When this value is transmitted to the client, they can attempt to generate the same hash.  If the hashes match, then the response was geniune.
+
 ## Settings
 
 The `signature` package provides some settings to allow you to use non-default field names in your code.  Remember that the client needs to use the same fields in order for the security hashes to match.
@@ -56,7 +66,7 @@ The `signature` package provides some settings to allow you to use non-default f
     // SignatureKey is the key (URL field) for the signature of requests.
     signature.SignatureKey string = "~sign"
 
-## Validation
+## Validating request signature
 
 To validate your code is generating the correct hash, try these:
 
