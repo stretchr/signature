@@ -5,6 +5,7 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"github.com/stretchrcom/stew/strings"
+	"github.com/stretchrcom/tracer"
 	"io"
 )
 
@@ -55,5 +56,23 @@ var MD5Hash HashFunc = func(s string) string {
 //
 // Useful for hashing non URLs (such as response bodies etc.)
 func HashWithKeys(body, publicKey, privateKey []byte) string {
-	return Hash(string(strings.JoinBytes([]byte(HashWithKeysSeparator), body, publicKey, privateKey)))
+	return HashWithKeysWithTrace(body, publicKey, privateKey, nil)
+}
+
+func HashWithKeysWithTrace(body, publicKey, privateKey []byte, t *tracer.Tracer) string {
+
+	if t.Should(tracer.LevelDebug) {
+		t.Trace(tracer.LevelDebug, "HashWithKeys: body=", body)
+		t.Trace(tracer.LevelDebug, "HashWithKeys: publicKey=", publicKey)
+		t.Trace(tracer.LevelDebug, "HashWithKeys: privateKey=", privateKey)
+	}
+
+	hash := Hash(string(strings.JoinBytes([]byte(HashWithKeysSeparator), body, publicKey, privateKey)))
+
+	if t.Should(tracer.LevelDebug) {
+		t.Trace(tracer.LevelDebug, "HashWithKeys: Output: %s", hash)
+	}
+
+	return hash
+
 }
