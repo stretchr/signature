@@ -18,7 +18,7 @@ var ErrNoSignatureFound = errors.New("No signature was found.")
 // trace writes some trace (if there is a Tracer set).
 func trace(t *tracer.Tracer, format string, args ...interface{}) {
 
-	if t != nil {
+	if t.Should(tracer.LevelDebug) {
 
 		// add the 'signature' prefix to trace
 		if len(format) > 0 {
