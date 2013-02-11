@@ -16,8 +16,9 @@ const FailedSignature string = ":-("
 var ErrNoSignatureFound = errors.New("No signature was found.")
 
 // trace writes some trace (if there is a Tracer set).
-func trace(format string, args ...interface{}) {
-	if Tracer != nil {
+func trace(t *tracer.Tracer, format string, args ...interface{}) {
+
+	if t != nil {
 
 		// add the 'signature' prefix to trace
 		if len(format) > 0 {
@@ -25,27 +26,33 @@ func trace(format string, args ...interface{}) {
 		}
 
 		// trace this
-		Tracer.Trace(tracer.LevelDebug, format, args...)
+		t.Trace(tracer.LevelDebug, format, args...)
 	}
+
 }
 
 // GetSignature gets the signature of a request based on the given parameters.
 func GetSignature(method, requestUrl, body, privateKey string) (string, error) {
+	return GetSignatureWithTrace(method, requestUrl, body, privateKey, nil)
+}
 
-	trace("GetSignature: method=%s", method)
-	trace("GetSignature: requestUrl=%s", requestUrl)
-	trace("GetSignature: body=%s", body)
-	trace("GetSignature: privateKey=%s", privateKey)
+// GetSignatureWithTrace gets the signature of a request based on the given parameters.
+func GetSignatureWithTrace(method, requestUrl, body, privateKey string, tracer *tracer.Tracer) (string, error) {
+
+	trace(tracer, "GetSignature: method=%s", method)
+	trace(tracer, "GetSignature: requestUrl=%s", requestUrl)
+	trace(tracer, "GetSignature: body=%s", body)
+	trace(tracer, "GetSignature: privateKey=%s", privateKey)
 
 	// parse the URL
 	u, parseErr := url.ParseRequestURI(requestUrl)
 
 	if parseErr != nil {
-		trace("GetSignature: FAILED to parse the URL: %s", parseErr)
+		trace(tracer, "GetSignature: FAILED to parse the URL: %s", parseErr)
 		return FailedSignature, parseErr
 	}
 
-	trace("GetSignature: Parsed the URL as: %s", u.String())
+	trace(tracer, "GetSignature: Parsed the URL as: %s", u.String())
 
 	// get the query values
 	values := u.Query()
@@ -53,30 +60,30 @@ func GetSignature(method, requestUrl, body, privateKey string) (string, error) {
 	// add the private key parameter
 	values.Set(PrivateKeyKey, privateKey)
 
-	trace("GetSignature: Set the private key (%s): %s", PrivateKeyKey, privateKey)
+	trace(tracer, "GetSignature: Set the private key (%s): %s", PrivateKeyKey, privateKey)
 
 	if len(body) > 0 {
 		bodyHash := Hash(body)
-		trace("GetSignature: Set the body hash (%s): %s", BodyHashKey, bodyHash)
+		trace(tracer, "GetSignature: Set the body hash (%s): %s", BodyHashKey, bodyHash)
 		values.Set(BodyHashKey, bodyHash)
 	} else {
-		trace("GetSignature: Skipping body hash as there's no body (%s).", BodyHashKey)
+		trace(tracer, "GetSignature: Skipping body hash as there's no body (%s).", BodyHashKey)
 	}
 
 	// get the ordered params
 	orderedParams := OrderParams(values)
 
-	trace("GetSignature: Ordered parameters: %s", orderedParams)
+	trace(tracer, "GetSignature: Ordered parameters: %s", orderedParams)
 
 	base := strings.Split(u.String(), "?")[0]
 	combined := stewstrings.MergeStrings(strings.ToUpper(method), "&", base, "?", orderedParams)
 
-	trace("GetSignature: Base    : %s", base)
-	trace("GetSignature: Combined: %s", combined)
+	trace(tracer, "GetSignature: Base    : %s", base)
+	trace(tracer, "GetSignature: Combined: %s", combined)
 
 	theHash := Hash(combined)
 
-	trace("GetSignature: Output: %s", theHash)
+	trace(tracer, "GetSignature: Output: %s", theHash)
 
 	return theHash, nil
 
@@ -84,16 +91,21 @@ func GetSignature(method, requestUrl, body, privateKey string) (string, error) {
 
 // GetSignedURL gets the URL with the sign parameter added based on the given parameters.
 func GetSignedURL(method, requestUrl, body, privateKey string) (string, error) {
+	return GetSignedURLWithTrace(method, requestUrl, body, privateKey, nil)
+}
 
-	trace("GetSignedURL: method=%s", method)
-	trace("GetSignedURL: requestUrl=%s", requestUrl)
-	trace("GetSignedURL: body=%s", body)
-	trace("GetSignedURL: privateKey=%s", privateKey)
+// GetSignedURL gets the URL with the sign parameter added based on the given parameters.
+func GetSignedURLWithTrace(method, requestUrl, body, privateKey string, tracer *tracer.Tracer) (string, error) {
 
-	hash, hashErr := GetSignature(method, requestUrl, body, privateKey)
+	trace(tracer, "GetSignedURL: method=%s", method)
+	trace(tracer, "GetSignedURL: requestUrl=%s", requestUrl)
+	trace(tracer, "GetSignedURL: body=%s", body)
+	trace(tracer, "GetSignedURL: privateKey=%s", privateKey)
+
+	hash, hashErr := GetSignatureWithTrace(method, requestUrl, body, privateKey, tracer)
 
 	if hashErr != nil {
-		trace("GetSignedURL: FAILED to get the signature: %s", hashErr)
+		trace(tracer, "GetSignedURL: FAILED to get the signature: %s", hashErr)
 		return FailedSignature, hashErr
 	}
 
@@ -104,7 +116,7 @@ func GetSignedURL(method, requestUrl, body, privateKey string) (string, error) {
 		signedUrl = stewstrings.MergeStrings(requestUrl, "?", url.QueryEscape(SignatureKey), "=", url.QueryEscape(hash))
 	}
 
-	trace("GetSignedURL: Output: %s", signedUrl)
+	trace(tracer, "GetSignedURL: Output: %s", signedUrl)
 
 	return signedUrl, nil
 
@@ -113,14 +125,20 @@ func GetSignedURL(method, requestUrl, body, privateKey string) (string, error) {
 // ValidateSignature validates the signature in a URL to ensure it is correct based on
 // the specified parameters.
 func ValidateSignature(method, requestUrl, body, privateKey string) (bool, error) {
+	return ValidateSignatureWithTrace(method, requestUrl, body, privateKey, nil)
+}
 
-	trace("ValidateSignature: method=%s", method)
-	trace("ValidateSignature: requestUrl=%s", requestUrl)
-	trace("ValidateSignature: body=%s", body)
-	trace("ValidateSignature: privateKey=%s", privateKey)
+// ValidateSignature validates the signature in a URL to ensure it is correct based on
+// the specified parameters.
+func ValidateSignatureWithTrace(method, requestUrl, body, privateKey string, tracer *tracer.Tracer) (bool, error) {
+
+	trace(tracer, "ValidateSignature: method=%s", method)
+	trace(tracer, "ValidateSignature: requestUrl=%s", requestUrl)
+	trace(tracer, "ValidateSignature: body=%s", body)
+	trace(tracer, "ValidateSignature: privateKey=%s", privateKey)
 
 	if !strings.Contains(requestUrl, "?") {
-		trace("ValidateSignature: FAILED because there was no signature found.")
+		trace(tracer, "ValidateSignature: FAILED because there was no signature found.")
 		return false, ErrNoSignatureFound
 	}
 
@@ -146,22 +164,22 @@ func ValidateSignature(method, requestUrl, body, privateKey string) (bool, error
 
 	modifiedURL := stewstrings.MergeStrings(bareURL, "?", stewstrings.JoinStrings("&", cleanParams...))
 
-	trace("ValidateSignature: Modified URL (without signature): %s", modifiedURL)
+	trace(tracer, "ValidateSignature: Modified URL (without signature): %s", modifiedURL)
 
-	expectedSignature, signErr := GetSignature(method, modifiedURL, body, privateKey)
+	expectedSignature, signErr := GetSignatureWithTrace(method, modifiedURL, body, privateKey, tracer)
 
 	if signErr != nil {
-		trace("ValidateSignature: FAILED to GetSignature: %s", signErr)
+		trace(tracer, "ValidateSignature: FAILED to GetSignature: %s", signErr)
 		return false, signErr
 	}
 
 	if signature != expectedSignature {
 		err := errors.New(fmt.Sprintf("Signature \"%s\" is incorrect when \"%s\" is expected.", signature, expectedSignature))
-		trace("ValidateSignature: Signatures do not match: %s", err)
+		trace(tracer, "ValidateSignature: Signatures do not match: %s", err)
 		return false, err
 	}
 
-	trace("ValidateSignature: Happy because the signatures match: %s", signature)
+	trace(tracer, "ValidateSignature: Happy because the signatures match: %s", signature)
 
 	return true, nil
 
