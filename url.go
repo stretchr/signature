@@ -25,7 +25,7 @@ func OrderParams(values url.Values) string {
 	for _, key := range keys {
 		sort.Strings(values[key])
 		for _, val := range values[key] {
-			ordered = append(ordered, stewstrings.MergeStrings(url.QueryEscape(key), "=", url.QueryEscape(val)))
+			ordered = append(ordered, stewstrings.MergeStrings(key, "=", val))
 		}
 	}
 
