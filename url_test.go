@@ -17,6 +17,6 @@ func TestOrderParams(t *testing.T) {
 
 	ordered := OrderParams(values)
 
-	assert.Equal(t, "%3Aage=%3E20&%3Aname=%21Laurie&%3Aname=%21Mat&%3Asomething=%3E2+0&~key=ABC123", ordered)
+	assert.Equal(t, ":age=>20&:name=!Laurie&:name=!Mat&:something=>2 0&~key=ABC123", ordered)
 
 }

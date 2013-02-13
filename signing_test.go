@@ -11,16 +11,16 @@ func TestGetSignature(t *testing.T) {
 	var signed string
 
 	signed, _ = GetSignature("GET", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20", "body", "ABC123-private")
-	assert.Equal(t, "df073ee4086eed5848d167871c7424937027728e", signed)
+	assert.Equal(t, "6c3dc03b3f85c9eb80ed9e4bd21e82f1bbda5b8d", signed)
 
 	signed, _ = GetSignature("get", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20", "body", "ABC123-private")
-	assert.Equal(t, "df073ee4086eed5848d167871c7424937027728e", signed, "Lower case method shouldn't affect GetSignature")
+	assert.Equal(t, "6c3dc03b3f85c9eb80ed9e4bd21e82f1bbda5b8d", signed, "Lower case method shouldn't affect GetSignature")
 
 	signed, _ = GetSignature("GET", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20", "body", "DIFFERENT-PRIVATE")
-	assert.Equal(t, "34f55c3a086c260098e75066b38ac42e33e8faab", signed)
+	assert.Equal(t, "2d6ad8d46cd8d08d5dfeb91a30dd4cd50f30eb36", signed)
 
 	signed, _ = GetSignature("GET", "http://test.stretchr.com/api/v1?:name=!Laurie&~key=ABC123&:age=>20&:name=!Mat", "body", "DIFFERENT-PRIVATE")
-	assert.Equal(t, "34f55c3a086c260098e75066b38ac42e33e8faab", signed, "Different order of args shouldn't matter")
+	assert.Equal(t, "2d6ad8d46cd8d08d5dfeb91a30dd4cd50f30eb36", signed, "Different order of args shouldn't matter")
 
 }
 
@@ -29,10 +29,10 @@ func TestGetSignedURL(t *testing.T) {
 	var signed string
 
 	signed, _ = GetSignedURL("GET", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20", "body", "ABC123-private")
-	assert.Equal(t, "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~sign=df073ee4086eed5848d167871c7424937027728e", signed)
+	assert.Equal(t, "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~sign=6c3dc03b3f85c9eb80ed9e4bd21e82f1bbda5b8d", signed)
 
 	signed, _ = GetSignedURL("GET", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20", "body", "DIFFERENT-PRIVATE")
-	assert.Equal(t, "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~sign=34f55c3a086c260098e75066b38ac42e33e8faab", signed)
+	assert.Equal(t, "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~sign=2d6ad8d46cd8d08d5dfeb91a30dd4cd50f30eb36", signed)
 
 }
 
@@ -60,6 +60,6 @@ func TestValidateSignature(t *testing.T) {
 func TestNoBodyHashWhenNoBody(t *testing.T) {
 
 	signed, _ := GetSignedURL("GET", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20", "", "ABC123-private")
-	assert.Equal(t, "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~sign=bdf49047abf3c8e56de21e244bc24b1c2a6086a2", signed)
+	assert.Equal(t, "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~sign=a895aba356712de4e82e336be599df8b665b0fea", signed)
 
 }
