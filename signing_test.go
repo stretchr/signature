@@ -69,9 +69,11 @@ func TestNoBodyHashWhenNoBody(t *testing.T) {
 
 func TestSigning_BodyInURL(t *testing.T) {
 
-	valid, _ := ValidateSignature("GET", "http://test.stretchr.com/api/v1/test?~always200=1&~body={%22question%22:%22Is%20this%20OK%20and%20working?%22}&~callback=Stretchr.callback&~context=1&~key=PjPQMRsam7ewtQbboRLiEC7n88kICT5d&~method=POST&~sign=fbd7bdf98385f7a80d3e58cffd4be7ad2f48cf50", "", "ABC123-Private")
+	valid, _ := ValidateSignature("GET", `http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~body={"question":"Is this OK & working?"}&~sign=934c2494dd617dfeeae63a3a3341f6f4db0adadb`, "", "ABC123-Private")
 	assert.Equal(t, true, valid, "1")
 
-	valid, _ = ValidateSignature("GET", `http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~body={"question":"Is this OK & working?"}&~sign=934c2494dd617dfeeae63a3a3341f6f4db0adadb`, "", "ABC123-Private")
+	// The tests below represent real requests via JSONP
+	valid, _ = ValidateSignature("GET", `http://test.stretchr.com/api/v1/test?~always200=1&~body=%7B%22question%22%3A%22Is%20this%20OK%20%26%20working%3F%22%7D&~callback=Stretchr.callback&~context=1&~key=PjPQMRsam7ewtQbboRLiEC7n88kICT5d&~method=POST&~sign=7a8be95b929b4496a0a68f2a00a01f38cadef872`, "", "HHyLNu5sSt3tYdrUNVukG57tidfo89W1")
 	assert.Equal(t, true, valid, "2")
+
 }
