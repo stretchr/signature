@@ -6,6 +6,7 @@ import (
 	stewstrings "github.com/stretchrcom/stew/strings"
 	"github.com/stretchrcom/tracer"
 	"net/url"
+	"regexp"
 	"strings"
 )
 
@@ -14,6 +15,9 @@ const FailedSignature string = ":-("
 
 // ErrNoSignatureFound is the error that is thrown when no signature could be found.
 var ErrNoSignatureFound = errors.New("No signature was found.")
+
+// signatureRegex is the regex used to remove the signature from the URL string
+var signatureRegex = regexp.MustCompile("(.*)[&?]~sign=([0-9a-zA-Z]+)(.*)")
 
 // trace writes some trace (if there is a Tracer set).
 func trace(t *tracer.Tracer, format string, args ...interface{}) {
@@ -142,27 +146,16 @@ func ValidateSignatureWithTrace(method, requestUrl, body, privateKey string, tra
 		return false, ErrNoSignatureFound
 	}
 
-	// First, get the query string alone
-	segs := strings.Split(requestUrl, "?")
+	matches := signatureRegex.FindStringSubmatch(requestUrl)
+	var modifiedURL string
 
-	bareURL := segs[0]
-
-	// segs[1] now contains all the parameters. We need to extract the signature
-	// and reconstruct the url without it
-	paramSegs := strings.Split(segs[1], "&")
-
-	var cleanParams []string
-	var signature string
-	for _, param := range paramSegs {
-		if strings.Contains(param, SignatureKey) {
-			sigParts := strings.Split(param, "=")
-			signature = sigParts[1]
-		} else {
-			cleanParams = append(cleanParams, param)
-		}
+	if len(matches) == 0 {
+		trace(tracer, "ValidateSignature: FAILED to GetSignature: %s", ErrNoSignatureFound)
+		return false, ErrNoSignatureFound
 	}
 
-	modifiedURL := stewstrings.MergeStrings(bareURL, "?", stewstrings.JoinStrings("&", cleanParams...))
+	modifiedURL = stewstrings.MergeStrings(matches[1], matches[3])
+	signature := matches[2]
 
 	trace(tracer, "ValidateSignature: Modified URL (without signature): %s", modifiedURL)
 
