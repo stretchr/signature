@@ -6,7 +6,12 @@ import (
 	"github.com/stretchrcom/signature"
 	"github.com/stretchrcom/tracer"
 	"io/ioutil"
+	"net/http"
 )
+
+func absoluteUrlForRequest(request *http.Request) string {
+	return fmt.Sprintf("http://%s%s", request.Host, request.RequestURI)
+}
 
 func main() {
 
@@ -14,9 +19,11 @@ func main() {
 	goweb.MapFunc("/", func(c *goweb.Context) {
 
 		method := c.Request.Method
-		requestUrl := c.Request.URL.String()
+		requestUrl := absoluteUrlForRequest(c.Request)
 		privateKey := "PRIVATE"
 		body, bodyErr := ioutil.ReadAll(c.Request.Body)
+
+		fmt.Printf("URL: %s", requestUrl)
 
 		if bodyErr != nil {
 			c.RespondWithErrorMessage(fmt.Sprintf("Balls! Couldn't read the body because %s", bodyErr), 500)
