@@ -17,7 +17,7 @@ const FailedSignature string = ":-("
 var ErrNoSignatureFound = errors.New("No signature was found.")
 
 // signatureRegex is the regex used to remove the signature from the URL string
-var signatureRegex = regexp.MustCompile("(.*)[&?]~sign=([0-9a-zA-Z]+)(.*)")
+var signatureRegex = regexp.MustCompile("(.*)[&?](~|%7E)sign=([0-9a-zA-Z]+)(.*)")
 
 // trace writes some trace (if there is a Tracer set).
 func trace(t *tracer.Tracer, format string, args ...interface{}) {
@@ -150,12 +150,14 @@ func ValidateSignatureWithTrace(method, requestUrl, body, privateKey string, tra
 	var modifiedURL string
 
 	if len(matches) == 0 {
-		trace(tracer, "ValidateSignature: FAILED to GetSignature: %s", ErrNoSignatureFound)
+		trace(tracer, "ValidateSignature: Failed to get signature: %s", ErrNoSignatureFound)
 		return false, ErrNoSignatureFound
+	} else {
+		trace(tracer, "MATCHES: %s", matches)
 	}
 
-	modifiedURL = stewstrings.MergeStrings(matches[1], matches[3])
-	signature := matches[2]
+	modifiedURL = stewstrings.MergeStrings(matches[1], matches[4])
+	signature := matches[3]
 
 	trace(tracer, "ValidateSignature: Modified URL (without signature): %s", modifiedURL)
 
