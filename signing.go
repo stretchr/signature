@@ -17,7 +17,7 @@ const FailedSignature string = ":-("
 var ErrNoSignatureFound = errors.New("No signature was found.")
 
 // SignatureRegex is the regex used to remove the signature from the URL string
-var SignatureRegex = regexp.MustCompile("(.*)[&?](~|%7E)sign=([0-9a-zA-Z]+)(.*)")
+var SignatureRegex = regexp.MustCompile("(.*)[&?](~|%7E)?sign=([0-9a-zA-Z]+)(.*)")
 
 // trace writes some trace (if there is a Tracer set).
 func trace(t *tracer.Tracer, format string, args ...interface{}) {
