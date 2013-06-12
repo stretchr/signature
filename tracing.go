@@ -1,7 +1,7 @@
 package signature
 
 import (
-	"github.com/stretchrcom/tracer"
+	"github.com/stretchr/tracer"
 )
 
 // Tracer (by default nil) is the object that the signature package

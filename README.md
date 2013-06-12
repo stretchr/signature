@@ -3,7 +3,7 @@ Signature
 
 URL signing package for Go.
 
-  * You can jump straight into the [API documentation](http://godoc.org/github.com/stretchrcom/signature).
+  * You can jump straight into the [API documentation](http://godoc.org/github.com/stretchr/signature).
 
 ## What does it do?
 

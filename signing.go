@@ -3,8 +3,8 @@ package signature
 import (
 	"errors"
 	"fmt"
-	stewstrings "github.com/stretchrcom/stew/strings"
-	"github.com/stretchrcom/tracer"
+	stewstrings "github.com/stretchr/stew/strings"
+	"github.com/stretchr/tracer"
 	"net/url"
 	"regexp"
 	"strings"

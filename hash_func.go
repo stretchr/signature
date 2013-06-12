@@ -4,8 +4,8 @@ import (
 	"crypto/md5"
 	"crypto/sha1"
 	"fmt"
-	"github.com/stretchrcom/stew/strings"
-	"github.com/stretchrcom/tracer"
+	"github.com/stretchr/stew/strings"
+	"github.com/stretchr/tracer"
 	"io"
 )
 

@@ -1,7 +1,7 @@
 package signature
 
 import (
-	stewstrings "github.com/stretchrcom/stew/strings"
+	stewstrings "github.com/stretchr/stew/strings"
 	"net/url"
 	"sort"
 )

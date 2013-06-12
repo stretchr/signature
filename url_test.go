@@ -1,7 +1,7 @@
 package signature
 
 import (
-	"github.com/stretchrcom/testify/assert"
+	"github.com/stretchr/testify/assert"
 	"net/url"
 	"testing"
 )

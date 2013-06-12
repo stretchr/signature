@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/stretchrcom/goweb"
-	"github.com/stretchrcom/goweb/context"
-	"github.com/stretchrcom/signature"
-	"github.com/stretchrcom/tracer"
+	"github.com/stretchr/goweb"
+	"github.com/stretchr/goweb/context"
+	"github.com/stretchr/signature"
+	"github.com/stretchr/tracer"
 	"io/ioutil"
 	"log"
 	"net"
