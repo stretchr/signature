@@ -37,7 +37,7 @@ func trace(t *tracer.Tracer, format string, args ...interface{}) {
 
 // GetSignature gets the signature of a request based on the given parameters.
 func GetSignature(method, requestUrl, body, privateKey string) (string, error) {
-	return GetSignatureWithTrace(method, requestUrl, body, privateKey, nil)
+	return GetSignatureWithTrace(method, requestUrl, body, privateKey, Tracer)
 }
 
 // GetSignatureWithTrace gets the signature of a request based on the given parameters.
@@ -95,7 +95,7 @@ func GetSignatureWithTrace(method, requestUrl, body, privateKey string, tracer *
 
 // GetSignedURL gets the URL with the sign parameter added based on the given parameters.
 func GetSignedURL(method, requestUrl, body, privateKey string) (string, error) {
-	return GetSignedURLWithTrace(method, requestUrl, body, privateKey, nil)
+	return GetSignedURLWithTrace(method, requestUrl, body, privateKey, Tracer)
 }
 
 // GetSignedURL gets the URL with the sign parameter added based on the given parameters.
@@ -129,7 +129,7 @@ func GetSignedURLWithTrace(method, requestUrl, body, privateKey string, tracer *
 // ValidateSignature validates the signature in a URL to ensure it is correct based on
 // the specified parameters.
 func ValidateSignature(method, requestUrl, body, privateKey string) (bool, error) {
-	return ValidateSignatureWithTrace(method, requestUrl, body, privateKey, nil)
+	return ValidateSignatureWithTrace(method, requestUrl, body, privateKey, Tracer)
 }
 
 // ValidateSignature validates the signature in a URL to ensure it is correct based on
@@ -146,18 +146,17 @@ func ValidateSignatureWithTrace(method, requestUrl, body, privateKey string, tra
 		return false, ErrNoSignatureFound
 	}
 
-	matches := SignatureRegex.FindStringSubmatch(requestUrl)
-	var modifiedURL string
+	segments := strings.Split(requestUrl, SignatureKey)
 
-	if len(matches) == 0 {
+	if len(segments) < 2 {
 		trace(tracer, "ValidateSignature: Failed to get signature: %s", ErrNoSignatureFound)
 		return false, ErrNoSignatureFound
 	} else {
-		trace(tracer, "MATCHES: %s", matches)
+		trace(tracer, "Segments: %s", segments)
 	}
 
-	modifiedURL = stewstrings.MergeStrings(matches[1], matches[4])
-	signature := matches[3]
+	modifiedURL := strings.TrimRight(segments[0], "&")
+	signature := strings.TrimLeft(segments[1], "=")
 
 	trace(tracer, "ValidateSignature: Modified URL (without signature): %s", modifiedURL)
 

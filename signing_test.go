@@ -3,6 +3,7 @@ package signature
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/tracer"
 	"testing"
 )
 
@@ -40,20 +41,20 @@ func TestValidateSignature(t *testing.T) {
 
 	var valid bool
 
-	signed, _ := GetSignature("GET", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20", "ABC123", "ABC123-private")
+	signed, _ := GetSignature("GET", "http://test.stretchr.com/api/v1?key=ABC123&:name=!Mat&:name=!Laurie&:age=>20", "ABC123", "ABC123-private")
 
-	valid, _ = ValidateSignature("GET", fmt.Sprintf("http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&sign=%s", signed), "ABC123", "ABC123-private")
+	valid, _ = ValidateSignature("GET", fmt.Sprintf("http://test.stretchr.com/api/v1?key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&sign=%s", signed), "ABC123", "ABC123-private")
 	assert.Equal(t, true, valid, "1")
 
 	valid, _ = ValidateSignature("GET", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~sign=qJWro1ZxLeToLjNr5Znfi2ZbD+o=", "ABC123", "ABC123-private-wrong")
 	assert.Equal(t, false, valid, "2")
 
 	signed, _ = GetSignature("get", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20", "ABC123", "ABC123-private")
-	valid, _ = ValidateSignature("GET", fmt.Sprintf("http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~sign=%s", signed), "ABC123", "ABC123-private")
+	valid, _ = ValidateSignature("GET", fmt.Sprintf("http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&sign=%s", signed), "ABC123", "ABC123-private")
 	assert.Equal(t, true, valid, "3")
 
 	signed, _ = GetSignature("GET", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20", "ABC123", "ABC123-private")
-	valid, _ = ValidateSignature("get", fmt.Sprintf("http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~sign=%s", signed), "ABC123", "ABC123-private")
+	valid, _ = ValidateSignature("get", fmt.Sprintf("http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&sign=%s", signed), "ABC123", "ABC123-private")
 	assert.Equal(t, true, valid, "4")
 
 	valid, _ = ValidateSignature("get", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&", "ABC123", "ABC123-private")
