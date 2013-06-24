@@ -62,7 +62,7 @@ The `signature` package provides some settings to allow you to use non-default f
 
 To validate your code is generating the correct hash, ensure it generates the following output.
 
-    GET http://test.stretchr.com/api/v1?:name=!Mat&:name=!Laurie&:age=>20
+    GET http://test.stretchr.com/api/v2?:name=!Mat&:name=!Laurie&:age=>20
 
     Public key:  ABC123
     Private key: ABC123-private
@@ -70,15 +70,15 @@ To validate your code is generating the correct hash, ensure it generates the fo
     
 #### Step 1: Get the original request URL
 
-    http://test.stretchr.com/api/v1?:name=!Mat&:name=!Laurie&:age=>20
+    http://test.stretchr.com/api/v2?:name=!Mat&:name=!Laurie&:age=>20
 
 #### Step 2: Add the public key value to the request URL
 
-    http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~key=ABC123
+    http://test.stretchr.com/api/v2?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~key=ABC123
 
 #### Step 3: Add the private key to a *copy* of this URL
 
-    http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~key=ABC123&~private=ABC123-private
+    http://test.stretchr.com/api/v2?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~key=ABC123&~private=ABC123-private
 
 #### Step 4: Add the body hash
 
@@ -86,19 +86,19 @@ Add the body hash containing an SHA-1 hash of the body contents if there is a bo
 
 In this case, since `"body"` is the body, it will be hashed as `02083f4579e08a612425c0c1a17ee47add783b94`.
 
-    http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~key=ABC123&~private=ABC123-private&~bodyhash=02083f4579e08a612425c0c1a17ee47add783b94
+    http://test.stretchr.com/api/v2?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~key=ABC123&~private=ABC123-private&bodyhash=02083f4579e08a612425c0c1a17ee47add783b94
 
 #### Step 5: Order parameters alphabetically.
 
 Order first by keys, and if there are multiple values for one key (i.e. ?color=red&color=blue) then order the values alphabetically afterwards.
 
-    http://test.stretchr.com/api/v1?:age=>20&:name=!Laurie&:name=!Mat&~bodyhash=02083f4579e08a612425c0c1a17ee47add783b94&~key=ABC123&~private=ABC123-private
+    http://test.stretchr.com/api/v2?:age=>20&:name=!Laurie&:name=!Mat&bodyhash=02083f4579e08a612425c0c1a17ee47add783b94&~key=ABC123&~private=ABC123-private
 
 #### Step 6: Prefix the HTTP method
 
 Append the HTTP method in uppercase, followed by an ampersand `&`:
 
-    GET&http://test.stretchr.com/api/v1?:age=>20&:name=!Laurie&:name=!Mat&~bodyhash=02083f4579e08a612425c0c1a17ee47add783b94&~key=ABC123&~private=ABC123-private
+    GET&http://test.stretchr.com/api/v2?:age=>20&:name=!Laurie&:name=!Mat&bodyhash=02083f4579e08a612425c0c1a17ee47add783b94&~key=ABC123&~private=ABC123-private
 
 #### Step 7: Hash it (using the SHA-1 hash algorithm)
 
@@ -106,7 +106,7 @@ Append the HTTP method in uppercase, followed by an ampersand `&`:
 
 #### Step 8: Append the `signature.SignatureKey` to the *end* of the URL from step 2
 
-    http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~key=ABC123&~private=ABC123-private&~sign=6c3dc03b3f85c9eb80ed9e4bd21e82f1bbda5b8d
+    http://test.stretchr.com/api/v2?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&~key=ABC123&~private=ABC123-private&~sign=6c3dc03b3f85c9eb80ed9e4bd21e82f1bbda5b8d
 
 ## Response signing
 
