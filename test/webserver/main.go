@@ -15,6 +15,8 @@ import (
 	"time"
 )
 
+const Address string = ":8080"
+
 func absoluteUrlForRequest(request *http.Request) string {
 	return fmt.Sprintf("http://%s%s", request.Host, request.RequestURI)
 }
@@ -90,7 +92,6 @@ func main() {
 	   START OF WEB SERVER CODE
 
 	*/
-	Address := ":8080"
 
 	log.Print("Goweb 2")
 	log.Print("by Mat Ryer and Tyler Bunnell")
