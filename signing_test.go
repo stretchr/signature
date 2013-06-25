@@ -3,6 +3,7 @@ package signature
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"log"
 	"testing"
 )
 
@@ -99,11 +100,11 @@ func TestSigning_BodyInURL(t *testing.T) {
 
 	assert.Equal(t, true, valid, "1")
 
-	//s, _ := GetSignature("GET", `http://test.stretchr.com/api/v1/test?always200=1&body=%7B%22question%22%3A%22Is%20this%20OK%20%26%20working%3F%22%7D&callback=Stretchr.callback&context=1&key=ABC123&method=POST`, "", "PRIVATE")
-	//log.Printf(s)
+	s, _ := GetSignature("GET", `http://test.stretchr.com/api/v2/test?always200=1&body=%7B%22question%22%3A%22Is%20this%20OK%20%26%20working%3F%22%7D&callback=Stretchr.callback&context=1&key=ABC123&method=POST`, "", "PRIVATE")
+	log.Printf(s)
 
 	// The tests below represent real requests via JSONP
-	valid, _ = ValidateSignature("GET", `http://test.stretchr.com/api/v1/test?always200=1&body=%7B%22question%22%3A%22Is%20this%20OK%20%26%20working%3F%22%7D&callback=Stretchr.callback&context=1&key=ABC123&method=POST&sign=f11032c07de8f181feb1ecc54eea040e15fc5eea`, "", "PRIVATE")
+	valid, _ = ValidateSignature("GET", `http://test.stretchr.com/api/v2/test?always200=1&body=%7B%22question%22%3A%22Is%20this%20OK%20%26%20working%3F%22%7D&callback=Stretchr.callback&context=1&key=ABC123&method=POST&sign=6078d0be451bb783d31addb85db654a7759a8792`, "", "PRIVATE")
 
 	assert.Equal(t, true, valid, "2")
 
