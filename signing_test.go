@@ -57,8 +57,16 @@ func TestValidateSignature(t *testing.T) {
 	valid, _ = ValidateSignature("get", fmt.Sprintf("http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&sign=%s", signed), "ABC123", "ABC123-private")
 	assert.Equal(t, true, valid, "4")
 
+	signed, _ = GetSignature("GET", "http://test.stretchr.com/api/v1?~key=ABC123&:text=/test+plus", "ABC123", "ABC123-private")
+	valid, _ = ValidateSignature("get", fmt.Sprintf("http://test.stretchr.com/api/v1?~key=ABC123&:text=/test+plus&sign=%s", signed), "ABC123", "ABC123-private")
+	assert.Equal(t, true, valid, "5")
+
+	signed, _ = GetSignature("GET", "http://test.stretchr.com/api/v1?~key=ABC123&:text=/test%2bplus", "ABC123", "ABC123-private")
+	valid, _ = ValidateSignature("get", fmt.Sprintf("http://test.stretchr.com/api/v1?~key=ABC123&:text=/test%%2bplus&sign=%s", signed), "ABC123", "ABC123-private")
+	assert.Equal(t, true, valid, "6")
+
 	valid, _ = ValidateSignature("get", "http://test.stretchr.com/api/v1?~key=ABC123&:name=!Mat&:name=!Laurie&:age=>20&", "ABC123", "ABC123-private")
-	assert.Equal(t, false, valid, "5")
+	assert.Equal(t, false, valid, "7")
 
 }
 
