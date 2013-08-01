@@ -59,6 +59,11 @@ func HashWithKeys(body, publicKey, privateKey []byte) string {
 	return HashWithKeysWithTrace(body, publicKey, privateKey, nil)
 }
 
+// HashWithKey does the same as HashWithKey, but uses a single key.
+func HashWithKey(body, key []byte) string {
+	return HashWithKeyWithTrace(body, key, nil)
+}
+
 func HashWithKeysWithTrace(body, publicKey, privateKey []byte, t *tracer.Tracer) string {
 
 	if t.Should(tracer.LevelDebug) {
@@ -68,6 +73,23 @@ func HashWithKeysWithTrace(body, publicKey, privateKey []byte, t *tracer.Tracer)
 	}
 
 	hash := Hash(string(strings.JoinBytes([]byte(HashWithKeysSeparator), body, publicKey, privateKey)))
+
+	if t.Should(tracer.LevelDebug) {
+		t.Trace(tracer.LevelDebug, "HashWithKeys: Output: %s", hash)
+	}
+
+	return hash
+
+}
+
+func HashWithKeyWithTrace(body, key []byte, t *tracer.Tracer) string {
+
+	if t.Should(tracer.LevelDebug) {
+		t.Trace(tracer.LevelDebug, "HashWithKeys: body=", body)
+		t.Trace(tracer.LevelDebug, "HashWithKeys: key=", key)
+	}
+
+	hash := Hash(string(strings.JoinBytes([]byte(HashWithKeysSeparator), body, key)))
 
 	if t.Should(tracer.LevelDebug) {
 		t.Trace(tracer.LevelDebug, "HashWithKeys: Output: %s", hash)
