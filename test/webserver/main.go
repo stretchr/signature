@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-const Address string = ":8080"
+const Address string = ":80"
 
 func absoluteUrlForRequest(request *http.Request) string {
 	return fmt.Sprintf("http://%s%s", request.Host, request.RequestURI)
