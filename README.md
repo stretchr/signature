@@ -26,7 +26,7 @@ Before signing the request, you must:
 
 SignatureKey parameter generation:
 
-To generate a the signature for the request, the Signature package does the following:
+To generate a signature for the request, the Signature package does the following:
 
   * Create a copy of the request URL
   * Add `PrivateKeyKey` key parameter
