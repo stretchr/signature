@@ -29,7 +29,7 @@ func RandomKey(length int) string {
 	bytes := make([]byte, length)
 	for i := 0; i < length; i++ {
 		randInt := randInt(0, len(RandomKeyCharacters))
-		bytes[i] = RandomKeyCharacters[randInt : randInt+1][0]
+		bytes[i] = RandomKeyCharacters[randInt]
 	}
 	return string(bytes)
 
